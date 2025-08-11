@@ -4,23 +4,34 @@
 import PackageDescription
 
 let package = Package(
-    name: "npfoundation",
+    name: "knnio",
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "KNNIO",
+            name: "KNNIOCore",
             targets: [
-                "KNNIO"
+                "KNNIOCore"
+            ]),
+        .library(
+            name: "KNNIOPosix",
+            targets: [
+                "KNNIOPosix"
             ]),
     ],
+    dependencies: [
+//        .package(url: "https://github.com/kainian/knfoundation.git", branch: "main"),
+        .package(path: "../knfoundation")
+    ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "KNNIO"),
-        
+            name: "KNNIOCore",
+            dependencies: [
+                .product(name: "KNFoundation", package: "knfoundation")
+            ]),
         .testTarget(
-            name: "KNNIOTests",
-            dependencies: ["KNNIO"]),
+            name: "KNNIOCoreTests",
+            dependencies: ["KNNIOCore"]),
+        .target(
+            name: "KNNIOPosix"),
+        
     ]
 )

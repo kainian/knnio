@@ -1,8 +1,8 @@
 //
-//  KNNIO.h
+//  ByteBuffer.cpp
 //  knnio
 //
-//  Created by Jonathan Lee on 5/6/25.
+//  Created by Jonathan Lee on 8/8/25.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -22,3 +22,38 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 //
+
+#include <KNNIOCore/ByteBuffer.h>
+
+KN_NAMESPACE_BEGIN(knnio)
+KN_NAMESPACE_BEGIN(core)
+
+static Size nextPowerOf2ClampedToMax(Size minimumCapacity) {
+    if (minimumCapacity <= 0) {
+        return 1;
+    }
+    Size capacity = minimumCapacity;
+    
+    capacity -= 1;
+    capacity |= capacity >> 1;
+    capacity |= capacity >> 2;
+    capacity |= capacity >> 4;
+    capacity |= capacity >> 8;
+    capacity |= capacity >> 16;
+    if (capacity != UINT32_MAX) {
+        return capacity += 1;
+    }
+    return capacity;
+}
+
+ByteBuffer ByteBufferAllocator::buffer(uint32_t capacity) const {
+    return ByteBuffer(*this, capacity);
+}
+
+ByteBufferStorageBacked ByteBufferStorage::reallocated(ByteBufferAllocator allocator, Size minimumCapacity) {
+    Size capacity = nextPowerOf2ClampedToMax(minimumCapacity);
+    return KN::CopyOnWriteMake<ByteBufferStorage>(allocator, allocator.allocate(capacity), capacity);
+}
+
+KN_NAMESPACE_END
+KN_NAMESPACE_END
