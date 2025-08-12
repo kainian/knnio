@@ -50,27 +50,29 @@ public:
     typedef Bytes (*Allocate)(Size);
     typedef Bytes (*Reallocate)(Bytes, Size);
     typedef void (*Deallocate)(Bytes);
+    typedef void (*Memmove)(Bytes, const Bytes, Size);
     
-private:
+public:
     
     const Allocate allocate;
     const Reallocate reallocate;
     const Deallocate deallocate;
+    const Memmove memmove;
     
 public:
     
-    ByteBufferAllocator(Allocate allocate, Reallocate reallocate, Deallocate deallocate) : allocate(allocate), reallocate(reallocate), deallocate(deallocate) {
+    ByteBufferAllocator(Allocate allocate, Reallocate reallocate, Deallocate deallocate, Memmove memmove) : allocate(allocate), reallocate(reallocate), deallocate(deallocate), memmove(memmove) {
         
     }
     
-    ByteBufferAllocator() : allocate((Allocate)malloc), reallocate((Reallocate)realloc), deallocate((Deallocate)free) {
+    ByteBufferAllocator() : allocate((Allocate)::malloc), reallocate((Reallocate)::realloc), deallocate((Deallocate)::free), memmove((Memmove)::memmove) {
         
     }
     
     ByteBuffer buffer(uint32_t capacity) const;
 };
 
-class ByteBufferStorage: public KN::Nocopy {
+class ByteBufferStorage {
     
     friend ByteBuffer;
     
@@ -86,11 +88,17 @@ public:
         
     }
     
+    ByteBufferStorage(const ByteBufferStorage &storage);
+    
     ~ByteBufferStorage() {
         this->allocator.deallocate(bytes);
     }
     
-    static ByteBufferStorageBacked reallocated(ByteBufferAllocator allocator, Size minimumCapacity);
+    Size setBytes(const Bytes bytes, Size size, Size atIndex);
+    
+    static ByteBufferStorageBacked allocated(ByteBufferAllocator allocator, Size minimumCapacity);
+    
+    void reallocated(Size minimumNeededCapacity);
 
 };
 
@@ -104,7 +112,7 @@ private:
     
 public:
     
-    ByteBuffer(ByteBufferAllocator allocator, Size capacity) : storage(ByteBufferStorage::reallocated(allocator, capacity)), readerIndex(0), writerIndex(0) {
+    ByteBuffer(ByteBufferAllocator allocator, Size capacity) : storage(ByteBufferStorage::allocated(allocator, capacity)), readerIndex(0), writerIndex(0) {
         
     }
     
@@ -130,6 +138,22 @@ public:
         return this->get()->capacity;
     }
     
+public:
+    
+    Size writeBytes(const Bytes bytes, Size size) {
+        Size written = this->setBytes(bytes, size, this->writerIndex);
+        this->moveWriterIndexForwardBy(written);
+        return written;
+    }
+    
+    Size writeString(const std::string &string) {
+        return this->writeBytes((Bytes)string.data(), string.size());
+    }
+    
+    Size writeCString(const char * cString) {
+        return this->writeBytes((Bytes)cString, strlen(cString));
+    }
+    
 private:
     
     void moveReaderIndexTo(Size index) {
@@ -149,6 +173,12 @@ private:
     void moveWriterIndexForwardBy(Size offset) {
         this->moveWriterIndexTo(this->writerIndex + offset);
     }
+    
+    Size setBytes(Bytes bytes, Size size, Size atIndex) {
+        return this->storage->setBytes(bytes, size, atIndex);
+    }
+    
+private:
     
     const ByteBufferStorage *get() const {
         return storage.get();

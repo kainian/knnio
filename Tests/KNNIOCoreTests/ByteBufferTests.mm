@@ -41,4 +41,30 @@ using namespace knnio::core;
     XCTAssertEqual(1024, buffer.capacity());
 }
 
+- (void)testSimpleWritesAndReadTest {
+    Bytes bytes = _allocator.allocate(1024);
+    auto buffer = _allocator.buffer(1024);
+    auto written = buffer.writeBytes(bytes, 1024);
+    auto writableBytes = buffer.writableBytes();
+    XCTAssertEqual(1024, buffer.readableBytes());
+    XCTAssertEqual(1024, written);
+    
+    written = buffer.writeCString("");
+    writableBytes = buffer.writableBytes();
+    XCTAssertEqual(1024, buffer.readableBytes());
+    XCTAssertEqual(0, written);
+    
+    written = buffer.writeCString("X");
+    writableBytes = buffer.writableBytes();
+    XCTAssertEqual(1025, buffer.readableBytes());
+    XCTAssertEqual(1, written);
+    
+    written = buffer.writeCString("XXXXX");
+    writableBytes = buffer.writableBytes();
+    XCTAssertEqual(1030, buffer.readableBytes());
+    XCTAssertEqual(5, written);
+    
+    _allocator.deallocate(bytes);
+}
+
 @end

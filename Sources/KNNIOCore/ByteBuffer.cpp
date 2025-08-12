@@ -50,9 +50,35 @@ ByteBuffer ByteBufferAllocator::buffer(uint32_t capacity) const {
     return ByteBuffer(*this, capacity);
 }
 
-ByteBufferStorageBacked ByteBufferStorage::reallocated(ByteBufferAllocator allocator, Size minimumCapacity) {
+ByteBufferStorage::ByteBufferStorage(const ByteBufferStorage &storage) : allocator(storage.allocator) {
+    this->capacity = nextPowerOf2ClampedToMax(capacity);
+    this->bytes = allocator.allocate(this->capacity);
+}
+
+Size ByteBufferStorage::setBytes(const Bytes bytes, Size size, Size atIndex) {
+    if (size <= 0) {
+        return 0;
+    }
+    Size bytesCount = size;
+    Size newEndIndex = atIndex + bytesCount;
+    if (newEndIndex > this->capacity) {
+        this->reallocated(newEndIndex);
+    }
+    this->allocator.memmove(this->bytes + atIndex, bytes, size);
+    return size;
+}
+
+ByteBufferStorageBacked ByteBufferStorage::allocated(ByteBufferAllocator allocator, Size minimumCapacity) {
     Size capacity = nextPowerOf2ClampedToMax(minimumCapacity);
     return KN::CopyOnWriteMake<ByteBufferStorage>(allocator, allocator.allocate(capacity), capacity);
+}
+
+void ByteBufferStorage::reallocated(Size minimumNeededCapacity) {
+    this->capacity = nextPowerOf2ClampedToMax(minimumNeededCapacity);
+    Bytes newBytes = this->allocator.reallocate(this->bytes, this->capacity);
+    if (newBytes) {
+        this->bytes = newBytes;
+    }
 }
 
 KN_NAMESPACE_END
