@@ -1,8 +1,8 @@
 //
-//  KNNIOCore.cpp
+//  Thread.h
 //  knnio
 //
-//  Created by Jonathan Lee on 8/8/25.
+//  Created by Jonathan Lee on 8/13/25.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,3 +23,58 @@
 //  SOFTWARE.
 //
 
+#ifndef KNNIO_THREAD_H
+#define KNNIO_THREAD_H
+
+#include <KNFoundation/KNFoundation.h>
+#include <string>
+
+KN_NAMESPACE_BEGIN(knnio)
+
+class Thread {
+    
+private:
+    
+    const std::string name;
+    
+    const pthread_t handle;
+    
+public:
+    
+    Thread(const std::string &name) : name(name), handle(0) {
+        
+    }
+    
+    Thread(const std::string &name, pthread_t handle) : name(name), handle(handle) {
+        
+    }
+    
+public:
+    
+    const std::string & getName() const {
+        return this->name;
+    }
+    
+    const char * cName() const {
+        return this->name.c_str();
+    }
+    
+    pthread_t getHandle() const {
+        return this->handle;
+    }
+    
+public:
+    
+    bool isCurrentThread() const {
+        return this->handle == pthread_self();
+    }
+    
+public:
+    
+    static void spawnAndRun(std::string name, void (^body)(const Thread &thread));
+    
+};
+
+KN_NAMESPACE_END
+
+#endif /* KNNIO_THREAD_H */

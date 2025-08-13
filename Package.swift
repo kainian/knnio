@@ -7,14 +7,9 @@ let package = Package(
     name: "knnio",
     products: [
         .library(
-            name: "KNNIOCore",
+            name: "KNNIO",
             targets: [
-                "KNNIOCore"
-            ]),
-        .library(
-            name: "KNNIOPosix",
-            targets: [
-                "KNNIOPosix"
+                "KNNIO"
             ]),
     ],
     dependencies: [
@@ -23,15 +18,12 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "KNNIOCore",
+            name: "KNNIO",
             dependencies: [
                 .product(name: "KNFoundation", package: "knfoundation")
             ]),
         .testTarget(
-            name: "KNNIOCoreTests",
-            dependencies: ["KNNIOCore"]),
-        .target(
-            name: "KNNIOPosix"),
-        
+            name: "KNNIOTests",
+            dependencies: ["KNNIO"]),
     ]
 )

@@ -23,14 +23,13 @@
 //  SOFTWARE.
 //
 
-#ifndef KNNIOCORE_BYTEBUFFER_H
-#define KNNIOCORE_BYTEBUFFER_H
+#ifndef KNNIO_BYTEBUFFER_H
+#define KNNIO_BYTEBUFFER_H
 
 #include <KNFoundation/KNFoundation.h>
 #include <assert.h>
 
 KN_NAMESPACE_BEGIN(knnio)
-KN_NAMESPACE_BEGIN(core)
 
 class ByteBufferAllocator;
 class ByteBufferStorage;
@@ -186,6 +185,5 @@ private:
 };
 
 KN_NAMESPACE_END
-KN_NAMESPACE_END
 
-#endif /* KNNIOCORE_BYTEBUFFER_H */
+#endif /* KNNIO_BYTEBUFFER_H */

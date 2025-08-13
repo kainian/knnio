@@ -24,9 +24,9 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <KNNIOCore/KNNIOCore.h>
+#import <KNNIO/KNNIO.h>
 
-using namespace knnio::core;
+using namespace knnio;
 
 @interface ByteBufferTests : XCTestCase {
     ByteBufferAllocator _allocator;

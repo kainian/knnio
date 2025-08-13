@@ -1,5 +1,5 @@
 //
-//  KNNIOPosix.cpp
+//  ByteBufferTests.m
 //  knnio
 //
 //  Created by Jonathan Lee on 8/8/25.
@@ -23,3 +23,24 @@
 //  SOFTWARE.
 //
 
+#import <XCTest/XCTest.h>
+#import <KNNIO/KNNIO.h>
+
+using namespace knnio;
+
+@interface ThreadTests : XCTestCase
+
+@end
+
+@implementation ThreadTests
+
+- (void)testCurrentThreadWorks {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    Thread::spawnAndRun("test-thread", ^(const Thread &thread) {
+        XCTAssertTrue(thread.isCurrentThread());
+        dispatch_semaphore_signal(semaphore);
+    });
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+}
+
+@end

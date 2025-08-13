@@ -1,8 +1,8 @@
 //
-//  KNNIOPosix.h
+//  Thread.cpp
 //  knnio
 //
-//  Created by Jonathan Lee on 8/8/25.
+//  Created by Jonathan Lee on 8/13/25.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,4 +23,34 @@
 //  SOFTWARE.
 //
 
-#include <KNNIOCore/ByteBuffer.h>
+#include <KNNIO/Thread.h>
+#include <thread>
+
+KN_NAMESPACE_BEGIN(knnio)
+
+struct ThreadBox {
+    Thread *thread;
+    void (^body)(const Thread &thread);
+    ThreadBox(Thread *thread, void (^body)(const Thread &thread)) : thread(thread), body(body) { }
+};
+
+static void * run(void *args) {
+    ThreadBox *box = (ThreadBox *)args;
+    pthread_setname_np(box->thread->cName());
+    Thread thread{box->thread->getName(), pthread_self()};
+    box->body(thread);
+    delete box->thread;
+    delete box;
+}
+
+void Thread::spawnAndRun(std::string name, void (^body)(const Thread &thread)) {
+    pthread_t pThread;
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    pthread_attr_set_qos_class_np(&attr, qos_class_main(), 0);
+    ThreadBox *box = new ThreadBox(new Thread(name), body);
+    pthread_create(&pThread, &attr, run, box);
+    pthread_attr_destroy(&attr);
+}
+
+KN_NAMESPACE_END

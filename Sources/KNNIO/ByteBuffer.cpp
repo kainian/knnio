@@ -23,10 +23,9 @@
 //  SOFTWARE.
 //
 
-#include <KNNIOCore/ByteBuffer.h>
+#include <KNNIO/ByteBuffer.h>
 
 KN_NAMESPACE_BEGIN(knnio)
-KN_NAMESPACE_BEGIN(core)
 
 static Size nextPowerOf2ClampedToMax(Size minimumCapacity) {
     if (minimumCapacity <= 0) {
@@ -81,5 +80,4 @@ void ByteBufferStorage::reallocated(Size minimumNeededCapacity) {
     }
 }
 
-KN_NAMESPACE_END
 KN_NAMESPACE_END
