@@ -1,6 +1,6 @@
 //
-//  KNNIOTests.mm
-//  knnio
+//  ByteBufferTests.m
+//  npnio
 //
 //  Created by Jonathan Lee on 8/8/25.
 //
@@ -24,32 +24,23 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <KNNIO/KNNIO.h>
+#import <NPNIO/NPNIO.h>
 
-@interface KNNIOTests : XCTestCase
+using namespace NP::NIO;
+
+@interface ThreadTests : XCTestCase
 
 @end
 
-@implementation KNNIOTests
+@implementation ThreadTests
 
-- (void)setUp {
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-}
-
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-}
-
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-}
-
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testCurrentThreadWorks {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    Thread::spawnAndRun("test-thread", ^(const Thread &thread) {
+        XCTAssertTrue(thread.isCurrentThread());
+        dispatch_semaphore_signal(semaphore);
+    });
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 }
 
 @end

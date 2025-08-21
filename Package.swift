@@ -4,26 +4,26 @@
 import PackageDescription
 
 let package = Package(
-    name: "knnio",
+    name: "npnio",
     products: [
         .library(
-            name: "KNNIO",
+            name: "NPNIO",
             targets: [
-                "KNNIO"
+                "NPNIO"
             ]),
     ],
     dependencies: [
-//        .package(url: "https://github.com/kainian/knfoundation.git", branch: "main"),
-        .package(path: "../knfoundation")
+//        .package(url: "https://github.com/noctisplanet/npfoundation.git", branch: "main"),
+        .package(path: "../npfoundation")
     ],
     targets: [
         .target(
-            name: "KNNIO",
+            name: "NPNIO",
             dependencies: [
-                .product(name: "KNFoundation", package: "knfoundation")
+                .product(name: "NPFoundation", package: "npfoundation")
             ]),
         .testTarget(
-            name: "KNNIOTests",
-            dependencies: ["KNNIO"]),
+            name: "NPNIOTests",
+            dependencies: ["NPNIO"]),
     ]
 )

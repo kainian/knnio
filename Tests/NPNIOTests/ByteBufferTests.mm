@@ -1,6 +1,6 @@
 //
 //  ByteBufferTests.m
-//  knnio
+//  npnio
 //
 //  Created by Jonathan Lee on 8/8/25.
 //
@@ -24,23 +24,47 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <KNNIO/KNNIO.h>
+#import <NPNIO/NPNIO.h>
 
-using namespace knnio;
+using namespace NP::NIO;
 
-@interface ThreadTests : XCTestCase
+@interface ByteBufferTests : XCTestCase {
+    ByteBufferAllocator _allocator;
+}
 
 @end
 
-@implementation ThreadTests
+@implementation ByteBufferTests
 
-- (void)testCurrentThreadWorks {
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    Thread::spawnAndRun("test-thread", ^(const Thread &thread) {
-        XCTAssertTrue(thread.isCurrentThread());
-        dispatch_semaphore_signal(semaphore);
-    });
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+- (void)testAllocateAndCount {
+    const auto buffer = _allocator.buffer(1024);
+    XCTAssertEqual(1024, buffer.capacity());
+}
+
+- (void)testSimpleWritesAndReadTest {
+    Bytes bytes = _allocator.allocate(1024);
+    auto buffer = _allocator.buffer(1024);
+    auto written = buffer.writeBytes(bytes, 1024);
+    auto writableBytes = buffer.writableBytes();
+    XCTAssertEqual(1024, buffer.readableBytes());
+    XCTAssertEqual(1024, written);
+    
+    written = buffer.writeCString("");
+    writableBytes = buffer.writableBytes();
+    XCTAssertEqual(1024, buffer.readableBytes());
+    XCTAssertEqual(0, written);
+    
+    written = buffer.writeCString("X");
+    writableBytes = buffer.writableBytes();
+    XCTAssertEqual(1025, buffer.readableBytes());
+    XCTAssertEqual(1, written);
+    
+    written = buffer.writeCString("XXXXX");
+    writableBytes = buffer.writableBytes();
+    XCTAssertEqual(1030, buffer.readableBytes());
+    XCTAssertEqual(5, written);
+    
+    _allocator.deallocate(bytes);
 }
 
 @end

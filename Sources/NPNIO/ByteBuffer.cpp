@@ -1,6 +1,6 @@
 //
 //  ByteBuffer.cpp
-//  knnio
+//  npnio
 //
 //  Created by Jonathan Lee on 8/8/25.
 //
@@ -23,9 +23,10 @@
 //  SOFTWARE.
 //
 
-#include <KNNIO/ByteBuffer.h>
+#include <NPNIO/ByteBuffer.h>
 
-KN_NAMESPACE_BEGIN(knnio)
+NP_NAMESPACE_BEGIN(NP)
+NP_NAMESPACE_BEGIN(NIO)
 
 static Size nextPowerOf2ClampedToMax(Size minimumCapacity) {
     if (minimumCapacity <= 0) {
@@ -69,7 +70,7 @@ Size ByteBufferStorage::setBytes(const Bytes bytes, Size size, Size atIndex) {
 
 ByteBufferStorageBacked ByteBufferStorage::allocated(ByteBufferAllocator allocator, Size minimumCapacity) {
     Size capacity = nextPowerOf2ClampedToMax(minimumCapacity);
-    return KN::CopyOnWriteMake<ByteBufferStorage>(allocator, allocator.allocate(capacity), capacity);
+    return NP::CopyOnWriteMake<ByteBufferStorage>(allocator, allocator.allocate(capacity), capacity);
 }
 
 void ByteBufferStorage::reallocated(Size minimumNeededCapacity) {
@@ -80,4 +81,5 @@ void ByteBufferStorage::reallocated(Size minimumNeededCapacity) {
     }
 }
 
-KN_NAMESPACE_END
+NP_NAMESPACE_END
+NP_NAMESPACE_END

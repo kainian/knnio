@@ -1,6 +1,6 @@
 //
 //  ByteBuffer.h
-//  knnio
+//  npnio
 //
 //  Created by Jonathan Lee on 8/8/25.
 //
@@ -23,13 +23,14 @@
 //  SOFTWARE.
 //
 
-#ifndef KNNIO_BYTEBUFFER_H
-#define KNNIO_BYTEBUFFER_H
+#ifndef NPNIO_BYTEBUFFER_H
+#define NPNIO_BYTEBUFFER_H
 
-#include <KNFoundation/KNFoundation.h>
+#include <NPFoundation/NPFoundation.h>
 #include <assert.h>
 
-KN_NAMESPACE_BEGIN(knnio)
+NP_NAMESPACE_BEGIN(NP)
+NP_NAMESPACE_BEGIN(NIO)
 
 class ByteBufferAllocator;
 class ByteBufferStorage;
@@ -38,7 +39,7 @@ class ByteBuffer;
 typedef size_t Size;
 typedef uint8_t * Bytes;
 
-using ByteBufferStorageBacked = KN::CopyOnWriteBacked<ByteBufferStorage>;
+using ByteBufferStorageBacked = NP::CopyOnWriteBacked<ByteBufferStorage>;
 
 class ByteBufferAllocator {
     
@@ -174,7 +175,7 @@ private:
     }
     
     Size setBytes(Bytes bytes, Size size, Size atIndex) {
-        return this->storage->setBytes(bytes, size, atIndex);
+        return this->storage.acquireUnique()->setBytes(bytes, size, atIndex);
     }
     
 private:
@@ -184,6 +185,7 @@ private:
     }
 };
 
-KN_NAMESPACE_END
+NP_NAMESPACE_END
+NP_NAMESPACE_END
 
-#endif /* KNNIO_BYTEBUFFER_H */
+#endif /* NPNIO_BYTEBUFFER_H */

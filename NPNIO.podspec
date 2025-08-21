@@ -1,11 +1,11 @@
 Pod::Spec.new do |spec|
-    spec.name                           = 'KNNIO'
+    spec.name                           = 'NPNIO'
     spec.version                        = '0.1.0'
     spec.license                        = { :type => 'MIT', :file => 'LICENSE' }
-    spec.homepage                       = 'https://github.com/kainian/knnio'
+    spec.homepage                       = 'https://github.com/kainian/npnio'
     spec.authors                        = { 'Jonathan Lee' => 'Jonathan.Kaishan@gmail.com' }
     spec.summary                        = 'Extensions SDK for iOS and macOS.'
-    spec.source                         = { :git => 'https://github.com/kainian/knnio.git', :tag => spec.version.to_s }
+    spec.source                         = { :git => 'https://github.com/kainian/npnio.git', :tag => spec.version.to_s }
 
     spec.ios.deployment_target          = '12.2'
     spec.osx.deployment_target          = '11.0'
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
     spec.static_framework = true
     spec.frameworks                     = 'Foundation'
 
-    spec.source_files                   = 'Sources/KNNIO/**/*.{h,c,m}'
-    spec.public_header_files            = 'Sources/KNNIO/include/**/*.{h}'
-    spec.module_map                     = 'Sources/KNNIO/KNNIO.modulemap'
+    spec.source_files                   = 'Sources/NPNIO/**/*.{h,c,m}'
+    spec.public_header_files            = 'Sources/NPNIO/include/**/*.{h}'
+    spec.module_map                     = 'Sources/NPNIO/NPNIO.modulemap'
 end

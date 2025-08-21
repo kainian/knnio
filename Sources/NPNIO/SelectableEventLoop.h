@@ -1,8 +1,8 @@
 //
-//  KNNIOPosix.h
-//  knnio
+//  SelectableEventLoop.hpp
+//  npnio
 //
-//  Created by Jonathan Lee on 8/8/25.
+//  Created by Jonathan Lee on 8/14/25.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,5 +23,36 @@
 //  SOFTWARE.
 //
 
-#include <KNNIO/ByteBuffer.h>
-#include <KNNIO/Thread.h>
+#ifndef NPNIO_SELECTABLE_EVENTLOOP_H
+#define NPNIO_SELECTABLE_EVENTLOOP_H
+
+#include <NPFoundation/NPFoundation.h>
+#include <NPNIO/EventLoop.h>
+#include <NPNIO/Thread.h>
+
+NP_NAMESPACE_BEGIN(NP)
+NP_NAMESPACE_BEGIN(NIO)
+
+class SelectableEventLoop : public EventLoop {
+    
+private:
+    
+    const Thread *thread;
+    
+    const EventLoopGroup *group;
+    
+public:
+    
+    SelectableEventLoop(const Thread *thread, EventLoopGroup *group) : thread(thread), group(group) {
+        
+    }
+    
+private:
+    
+    void run();
+};
+
+NP_NAMESPACE_END
+NP_NAMESPACE_END
+
+#endif /* NPNIO_SELECTABLE_EVENTLOOP_H */

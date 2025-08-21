@@ -1,6 +1,6 @@
 //
-//  ByteBufferTests.m
-//  knnio
+//  NPNIOTests.mm
+//  npnio
 //
 //  Created by Jonathan Lee on 8/8/25.
 //
@@ -24,47 +24,32 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <KNNIO/KNNIO.h>
+#import <NPNIO/NPNIO.h>
 
-using namespace knnio;
-
-@interface ByteBufferTests : XCTestCase {
-    ByteBufferAllocator _allocator;
-}
+@interface NPNIOTests : XCTestCase
 
 @end
 
-@implementation ByteBufferTests
+@implementation NPNIOTests
 
-- (void)testAllocateAndCount {
-    const auto buffer = _allocator.buffer(1024);
-    XCTAssertEqual(1024, buffer.capacity());
+- (void)setUp {
+    // Put setup code here. This method is called before the invocation of each test method in the class.
 }
 
-- (void)testSimpleWritesAndReadTest {
-    Bytes bytes = _allocator.allocate(1024);
-    auto buffer = _allocator.buffer(1024);
-    auto written = buffer.writeBytes(bytes, 1024);
-    auto writableBytes = buffer.writableBytes();
-    XCTAssertEqual(1024, buffer.readableBytes());
-    XCTAssertEqual(1024, written);
-    
-    written = buffer.writeCString("");
-    writableBytes = buffer.writableBytes();
-    XCTAssertEqual(1024, buffer.readableBytes());
-    XCTAssertEqual(0, written);
-    
-    written = buffer.writeCString("X");
-    writableBytes = buffer.writableBytes();
-    XCTAssertEqual(1025, buffer.readableBytes());
-    XCTAssertEqual(1, written);
-    
-    written = buffer.writeCString("XXXXX");
-    writableBytes = buffer.writableBytes();
-    XCTAssertEqual(1030, buffer.readableBytes());
-    XCTAssertEqual(5, written);
-    
-    _allocator.deallocate(bytes);
+- (void)tearDown {
+    // Put teardown code here. This method is called after the invocation of each test method in the class.
+}
+
+- (void)testExample {
+    // This is an example of a functional test case.
+    // Use XCTAssert and related functions to verify your tests produce the correct results.
+}
+
+- (void)testPerformanceExample {
+    // This is an example of a performance test case.
+    [self measureBlock:^{
+        // Put the code you want to measure the time of here.
+    }];
 }
 
 @end

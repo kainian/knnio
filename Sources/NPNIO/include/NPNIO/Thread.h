@@ -1,6 +1,6 @@
 //
-//  Thread.cpp
-//  knnio
+//  Thread.h
+//  npnio
 //
 //  Created by Jonathan Lee on 8/13/25.
 //
@@ -23,34 +23,60 @@
 //  SOFTWARE.
 //
 
-#include <KNNIO/Thread.h>
-#include <thread>
+#ifndef NPNIO_THREAD_H
+#define NPNIO_THREAD_H
 
-KN_NAMESPACE_BEGIN(knnio)
+#include <NPFoundation/NPFoundation.h>
+#include <string>
 
-struct ThreadBox {
-    Thread *thread;
-    void (^body)(const Thread &thread);
-    ThreadBox(Thread *thread, void (^body)(const Thread &thread)) : thread(thread), body(body) { }
+NP_NAMESPACE_BEGIN(NP)
+NP_NAMESPACE_BEGIN(NIO)
+
+class Thread {
+    
+private:
+    
+    const std::string name;
+    
+    const pthread_t handle;
+    
+public:
+    
+    Thread(const std::string &name) : name(name), handle(0) {
+        
+    }
+    
+    Thread(const std::string &name, pthread_t handle) : name(name), handle(handle) {
+        
+    }
+    
+public:
+    
+    const std::string & getName() const {
+        return this->name;
+    }
+    
+    const char * cName() const {
+        return this->name.c_str();
+    }
+    
+    pthread_t getHandle() const {
+        return this->handle;
+    }
+    
+public:
+    
+    bool isCurrentThread() const {
+        return this->handle == pthread_self();
+    }
+    
+public:
+    
+    static void spawnAndRun(std::string name, void (^body)(const Thread &thread));
+    
 };
 
-static void * run(void *args) {
-    ThreadBox *box = (ThreadBox *)args;
-    pthread_setname_np(box->thread->cName());
-    Thread thread{box->thread->getName(), pthread_self()};
-    box->body(thread);
-    delete box->thread;
-    delete box;
-}
+NP_NAMESPACE_END
+NP_NAMESPACE_END
 
-void Thread::spawnAndRun(std::string name, void (^body)(const Thread &thread)) {
-    pthread_t pThread;
-    pthread_attr_t attr;
-    pthread_attr_init(&attr);
-    pthread_attr_set_qos_class_np(&attr, qos_class_main(), 0);
-    ThreadBox *box = new ThreadBox(new Thread(name), body);
-    pthread_create(&pThread, &attr, run, box);
-    pthread_attr_destroy(&attr);
-}
-
-KN_NAMESPACE_END
+#endif /* NPNIO_THREAD_H */
