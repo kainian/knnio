@@ -13,8 +13,7 @@ let package = Package(
             ]),
     ],
     dependencies: [
-//        .package(url: "https://github.com/noctisplanet/npfoundation.git", branch: "main"),
-        .package(path: "../npfoundation")
+        .package(url: "https://github.com/noctisplanet/npfoundation.git", branch: "main"),
     ],
     targets: [
         .target(
@@ -25,5 +24,6 @@ let package = Package(
         .testTarget(
             name: "NPNIOTests",
             dependencies: ["NPNIO"]),
-    ]
+    ],
+    cxxLanguageStandard: .cxx17
 )
