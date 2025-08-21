@@ -1,8 +1,8 @@
 //
-//  NPNIOTests.mm
+//  NPNIOTests.m
 //  npnio
 //
-//  Created by Jonathan Lee on 8/8/25.
+//  Created by Jonathan Lee on 8/21/25.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,6 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <NPNIO/NPNIO.h>
 
 @interface NPNIOTests : XCTestCase
 
@@ -32,24 +31,8 @@
 
 @implementation NPNIOTests
 
-- (void)setUp {
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-}
-
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-}
-
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-}
-
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testExamples {
+    
 }
 
 @end

@@ -42,6 +42,7 @@ static void * run(void *args) {
     box->body(thread);
     delete box->thread;
     delete box;
+    return nullptr;
 }
 
 void Thread::spawnAndRun(std::string name, void (^body)(const Thread &thread)) {
